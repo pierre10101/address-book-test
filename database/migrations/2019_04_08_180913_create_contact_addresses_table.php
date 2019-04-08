@@ -16,7 +16,6 @@ class CreateContactAddressesTable extends Migration
         Schema::create('contact_addresses', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('contacts_id');
-            $table->foreign('contacts_id')->references('id')->on('contacts');
             $table->string('email')->nullable();
             $table->string('contact_number')->nullable();
             $table->timestamps();
