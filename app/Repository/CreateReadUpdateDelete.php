@@ -69,7 +69,7 @@ class CreateReadUpdateDelete implements ModelRepositoryInterface
             ]));
         }
         if ($request->choice === false) {
-            $this->model->find($request->info['id'])->addresses()->update(
+            $this->model->find($request->info['id'])->addresses()->find($request->info['specific_id'])->update(
             array_filter([
                 'email' => $request->info['email'],
                 'contact_number' => $request->info['contact_number'],

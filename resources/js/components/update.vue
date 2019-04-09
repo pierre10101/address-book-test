@@ -27,19 +27,29 @@
                     </div>
                     <div v-else class="card-header">
                         <form>
-                            <div class="dropdown">
-                                <button :class="id === '' ? 'btn btn-success dropdown-toggle alert' : 'btn btn-secondary dropdown-toggle'" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    {{contact_name}}
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a v-for="(value,index) in contacts" :key="index" class="dropdown-item" @click="selectContact(index, value.name + ' ' + value.surname)" required>{{value.name + ' ' + value.surname}}</a>
+                            <div class="row">
+                                <div class="dropdown col-6">
+                                    <button :class="id === '' ? 'btn btn-success dropdown-toggle alert' : 'btn btn-secondary dropdown-toggle'" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        {{contact_name}}
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a v-for="(value,index) in contacts" :key="index" class="dropdown-item" @click="selectContact(index, value.name + ' ' + value.surname)" required>{{value.name + ' ' + value.surname}}</a>
+                                    </div>
+                                </div>
+                                <div class="dropdown col-6">
+                                    <button :class="id === '' ? 'btn btn-success dropdown-toggle alert' : 'btn btn-secondary dropdown-toggle'" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        {{specific_name}}
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a v-for="(value,index) in calcSpecificContactDetails" :key="index" class="dropdown-item" @click="specificContactSelect(value.id, index)" required>{{index}}</a>
+                                    </div>
                                 </div>
                             </div>
                             <label for="surname">Contact Number</label>
                             <input id="surname" class="form-control mr-sm-2" type="text" required v-model="contact_info.contact_number">
                             <label for="contact_number">Email Address</label>
                             <input id="contact_number" class="form-control mr-sm-2" type="text" required v-model="contact_info.email">
-                            <button class="btn btn-secondary" :disabled="contact_info.id === '' ? true : false" @click.prevent="update()">Update</button>
+                            <button class="btn btn-secondary" :disabled="id === '' || specific_id === '' ? true : false" @click.prevent="update()">Update</button>
                         </form>
                     </div>
                 </div>
@@ -66,6 +76,8 @@
                     contact_number: ''
                 },
                 id: '',
+                specific_id: '',
+                specific_name: 'Select id',
                 component_loaded: false,
                 contacts: '',
                 contact_name: 'Select Contact',
@@ -81,6 +93,7 @@
                 } else {
                     envelope = this.contact_info,
                     envelope['id'] = this.id;
+                    envelope['specific_id'] = this.specific_id;
                 }
                 axios.post('/contacts/update',{
                     info: envelope,
@@ -95,10 +108,21 @@
                 this.contact_name = name;
                 this.id = id;
             },
+            specificContactSelect(id,name){
+                this.specific_name = name;
+                this.specific_id = id;
+            },
             getContacts(){
                 axios.get('/contacts').then( response => {
                     this.contacts = response.data;
                 })
+            },
+        },
+        computed: {
+            calcSpecificContactDetails(){
+                if (this.id !== ''){
+                    return this.contacts[this.id].addresses
+                }
             },
         }
 

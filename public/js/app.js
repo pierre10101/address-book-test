@@ -2115,6 +2115,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
@@ -2132,6 +2142,8 @@ __webpack_require__.r(__webpack_exports__);
         contact_number: ''
       },
       id: '',
+      specific_id: '',
+      specific_name: 'Select id',
       component_loaded: false,
       contacts: '',
       contact_name: 'Select Contact',
@@ -2149,6 +2161,7 @@ __webpack_require__.r(__webpack_exports__);
         envelope['id'] = this.id;
       } else {
         envelope = this.contact_info, envelope['id'] = this.id;
+        envelope['specific_id'] = this.specific_id;
       }
 
       axios.post('/contacts/update', {
@@ -2164,12 +2177,23 @@ __webpack_require__.r(__webpack_exports__);
       this.contact_name = name;
       this.id = id;
     },
+    specificContactSelect: function specificContactSelect(id, name) {
+      this.specific_name = name;
+      this.specific_id = id;
+    },
     getContacts: function getContacts() {
       var _this2 = this;
 
       axios.get('/contacts').then(function (response) {
         _this2.contacts = response.data;
       });
+    }
+  },
+  computed: {
+    calcSpecificContactDetails: function calcSpecificContactDetails() {
+      if (this.id !== '') {
+        return this.contacts[this.id].addresses;
+      }
     }
   }
 });
@@ -37911,58 +37935,117 @@ var render = function() {
               ])
             : _c("div", { staticClass: "card-header" }, [
                 _c("form", [
-                  _c("div", { staticClass: "dropdown" }, [
-                    _c(
-                      "button",
-                      {
-                        class:
-                          _vm.id === ""
-                            ? "btn btn-success dropdown-toggle alert"
-                            : "btn btn-secondary dropdown-toggle",
-                        attrs: {
-                          type: "button",
-                          id: "dropdownMenuButton",
-                          "data-toggle": "dropdown",
-                          "aria-haspopup": "true",
-                          "aria-expanded": "false"
-                        }
-                      },
-                      [
-                        _vm._v(
-                          "\n                                " +
-                            _vm._s(_vm.contact_name) +
-                            "\n                            "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        staticClass: "dropdown-menu",
-                        attrs: { "aria-labelledby": "dropdownMenuButton" }
-                      },
-                      _vm._l(_vm.contacts, function(value, index) {
-                        return _c(
-                          "a",
-                          {
-                            key: index,
-                            staticClass: "dropdown-item",
-                            attrs: { required: "" },
-                            on: {
-                              click: function($event) {
-                                return _vm.selectContact(
-                                  index,
-                                  value.name + " " + value.surname
-                                )
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "dropdown col-6" }, [
+                      _c(
+                        "button",
+                        {
+                          class:
+                            _vm.id === ""
+                              ? "btn btn-success dropdown-toggle alert"
+                              : "btn btn-secondary dropdown-toggle",
+                          attrs: {
+                            type: "button",
+                            id: "dropdownMenuButton",
+                            "data-toggle": "dropdown",
+                            "aria-haspopup": "true",
+                            "aria-expanded": "false"
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                                    " +
+                              _vm._s(_vm.contact_name) +
+                              "\n                                "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "dropdown-menu",
+                          attrs: { "aria-labelledby": "dropdownMenuButton" }
+                        },
+                        _vm._l(_vm.contacts, function(value, index) {
+                          return _c(
+                            "a",
+                            {
+                              key: index,
+                              staticClass: "dropdown-item",
+                              attrs: { required: "" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.selectContact(
+                                    index,
+                                    value.name + " " + value.surname
+                                  )
+                                }
                               }
-                            }
-                          },
-                          [_vm._v(_vm._s(value.name + " " + value.surname))]
-                        )
-                      }),
-                      0
-                    )
+                            },
+                            [_vm._v(_vm._s(value.name + " " + value.surname))]
+                          )
+                        }),
+                        0
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "dropdown col-6" }, [
+                      _c(
+                        "button",
+                        {
+                          class:
+                            _vm.id === ""
+                              ? "btn btn-success dropdown-toggle alert"
+                              : "btn btn-secondary dropdown-toggle",
+                          attrs: {
+                            type: "button",
+                            id: "dropdownMenuButton",
+                            "data-toggle": "dropdown",
+                            "aria-haspopup": "true",
+                            "aria-expanded": "false"
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                                    " +
+                              _vm._s(_vm.specific_name) +
+                              "\n                                "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "dropdown-menu",
+                          attrs: { "aria-labelledby": "dropdownMenuButton" }
+                        },
+                        _vm._l(_vm.calcSpecificContactDetails, function(
+                          value,
+                          index
+                        ) {
+                          return _c(
+                            "a",
+                            {
+                              key: index,
+                              staticClass: "dropdown-item",
+                              attrs: { required: "" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.specificContactSelect(
+                                    value.id,
+                                    index
+                                  )
+                                }
+                              }
+                            },
+                            [_vm._v(_vm._s(index))]
+                          )
+                        }),
+                        0
+                      )
+                    ])
                   ]),
                   _vm._v(" "),
                   _c("label", { attrs: { for: "surname" } }, [
@@ -38026,7 +38109,8 @@ var render = function() {
                     {
                       staticClass: "btn btn-secondary",
                       attrs: {
-                        disabled: _vm.contact_info.id === "" ? true : false
+                        disabled:
+                          _vm.id === "" || _vm.specific_id === "" ? true : false
                       },
                       on: {
                         click: function($event) {
